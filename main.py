@@ -4,6 +4,8 @@ import random
 
 
 algorithm = ""
+speed = ""
+random_array = []
 algorithms = ["Binary Search", "Kadane's Algorithm", "Selection Sort"]
 speeds = ["Slow", "Medium", "Fast"]
 
@@ -12,6 +14,28 @@ def choose_algorithm():
     global algorithm
     algorithm = selected_algorithm.get()
     print(algorithm)
+
+def choose_speed():
+    #sets the selected speed
+    global speed
+    speed = selected_speed.get()
+    print(speed)
+
+def generate_array():
+    #generates a random array of numbers 
+    global random_array
+    random_array = [random.randint(0,99) for i in range(15)]
+    random_array.sort()
+    print(random_array)
+
+def reset():
+    #reset the drop down menus
+    global random_array, algorithm, speed
+    selected_algorithm.set(algorithms[0])
+    selected_speed.set(speeds[0])
+    random_array = []
+    algorithm = ""
+    speed = ""
 
 window = Tk()
 window.geometry("800x600")
@@ -25,15 +49,19 @@ selected_algorithm = StringVar()
 selected_speed = StringVar()
 selected_algorithm.set(algorithms[0])
 selected_speed.set(speeds[0])
+
 dropDown_algorithms = OptionMenu(window, selected_algorithm, *algorithms)
 dropDown_algorithms.config(width = 20, font = ("Times New Roman", 10), bg = "white", fg = "black")
 dropDown_algorithms.place(x = 320, y = 100)
 dropDown_speed = OptionMenu(window, selected_speed, *speeds)
 dropDown_speed.config(width = 20, font = ("Times New Roman", 10), bg = "white", fg = "black")
 dropDown_speed.place(x = 320, y = 140)
+# button_run_algorithm = Button()
+button_generate_array = Button(window, text="Generate Array", font = ("Times New Roman", 10), bg = "white", fg = "black", command = lambda: generate_array()).place(x = 270, y = 185)
+button_reset = Button(window, text = "Reset", font = ("Times New Roman", 10), bg = "white", fg = "black", command = lambda: reset()).place(x = 400, y = 185)
+button_run_algorithm = Button(window, text = "Run", font = ("Times New Roman", 10), bg = "white", fg = "black").place(x = 470, y = 185)
 # button_choose_algorithm = Button(window, text = "Select Algorithm", font = ("Times New Roman", 10), bg = "white", fg = "black", command = lambda: choose_algorithm())
 # button_choose_algorithm.place(x = 347, y = 150)
-
 
 
 window.mainloop()
