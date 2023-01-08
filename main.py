@@ -26,7 +26,9 @@ def generate_array():
     global random_array
     random_array = [random.randint(0,99) for i in range(15)]
     random_array.sort()
-    print(random_array)
+    for i in range(len(random_array)):
+        label = Label(window, text = random_array[i], font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 3, height = 2)
+        label.place(x = 150 + (i * 30), y = 230)
 
 def reset():
     #reset the drop down menus
@@ -68,27 +70,3 @@ window.mainloop()
 
 # frame = Frame(window, width=500, height=500, bg="white")
 # frame.grid(row=0, column=0, padx=10, pady=10)
-
-# global random_array
-# random_array = []
-# def random_array_generator():
-#     # generates a random array of numbers of length 5 to 10
-#     global random_array
-#     random_array = [random.randint(0, 100) for i in range(10)]
-#     random_array.sort()
-
-# def print_random_array():
-#     i = 0
-#     for element in random_array:
-#         label = Label(window, text = str(element))
-#         label.grid(row = 3, column = i , padx = 10, pady = 10)
-#         i+=1
-#     #remove the random array from the screen
-#     label.grid_forget()
-# generate_array = Button(window, text = "Generate Random Array", command = random_array_generator)
-# show_array = Button(window, text =  "Show Array", command = print_random_array)
-# generate_array.grid(row = 1, column = 1, padx = 10, pady = 10)
-# choose_algorithm.grid(row = 1, column = 0, padx = 10, pady = 10)
-# show_array.grid(row = 2, column = 0, padx = 10, pady = 10)
-# # display the entire array on the screen
-# window.mainloop()
