@@ -15,6 +15,7 @@ label_right_element = Label()
 label_mid_element = Label()
 algorithm = ""
 speed = ""
+pace = 0
 element_to_find = ""
 label_search_element = Label(window, text = "Search Element: ", font = ("Times New Roman", 15, "bold"))
 entry_search_element = Entry(window, font = ("Times New Roman", 10), bg = "white", fg = "black")
@@ -61,7 +62,14 @@ def search_algo_element():
 #runs the linear search algorithm visualization
 def linear_search():
     #runs the linear search algorithm
-    global element_to_find, random_array, random_array_elements,label_current_element
+    global element_to_find, random_array, random_array_elements,label_current_element, speed, pace
+    speed = selected_speed.get()
+    if (speed=="Fast"): 
+        pace = 0.2
+    elif (speed=="Medium"):
+        pace = 0.6
+    else:
+        pace = 1
     element_to_find = entry_search_element.get()
     element_to_find = int(element_to_find)
     #traverse through the array and search for the element, and simultaneously show a label below the element which is being searched
@@ -73,7 +81,7 @@ def linear_search():
             # label.config(bg = "blue")
             label_current_element.config(bg = "yellow")
             window.update()
-            time.sleep(2)
+            time.sleep(pace*3)
             label_current_element.config(bg = "white")
             window.update()
             break
@@ -82,16 +90,22 @@ def linear_search():
             # label1.place(x = 150 + (i * 30), y = 320)
             # label.config(bg = "red")
             #remove the label after 1 second
-            print("current element:", random_array[i])
             label_current_element.config(bg = "red")
             window.update()
-            time.sleep(1)
+            time.sleep(pace)
             label_current_element.config(bg = "white")
             # window.after(1000, label1.destroy)
             window.update()
             # label.config(bg = "white")
 def binary_search():
-    global element_to_find, random_array, random_array_elements, label_left_element, label_right_element, label_mid_element
+    global element_to_find, random_array, random_array_elements, label_left_element, label_right_element, label_mid_element, speed, pace
+    speed = selected_speed.get()
+    if (speed=="Fast"): 
+        pace = 0.2
+    elif (speed=="Medium"):
+        pace = 0.6
+    else:
+        pace = 1
     element_to_find = entry_search_element.get()
     element_to_find = int(element_to_find)
     left = 0
@@ -112,29 +126,30 @@ def binary_search():
         label_left_element.config(bg = "yellow")
         label_right_element.config(bg = "yellow")
         label_mid_element.config(bg = "yellow")
-        time.sleep(1)
+
+        time.sleep(pace)
         window.update()
         if (element_to_find>random_array[mid]):
             label_left_element.config(bg = "white")
             label_mid_element.config(bg = "white")
-            time.sleep(1)
+            time.sleep(pace)
             window.update()
             left = mid + 1
         elif (element_to_find<random_array[mid]):
             label_right_element.config(bg = "white")
             label_mid_element.config(bg = "white")
-            time.sleep(1)
+            time.sleep(pace)
             window.update()
             right = mid-1
         else:
             label_left_element.config(bg = "white")
             label_right_element.config(bg = "white")
             label_mid_element.config(bg = "red")
-            time.sleep(1)
+            window.update()
+            time.sleep(pace*3)
+            label_mid_element.config(bg = "white")
             window.update()
             break
-
-
 
 #runs the binary search algorithm visualization
 def run_algorithm():
