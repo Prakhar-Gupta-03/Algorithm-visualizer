@@ -26,6 +26,7 @@ random_array = []
 random_linked_list = []
 random_array_elements = []
 random_linked_list_elements = []
+random_linked_list_arrows = []
 algorithms = ["Linear Search","Binary Search", "Kadane's Algorithm", "Selection Sort", "Middle of Linked List", "Merge Sort"]
 speeds = ["Slow", "Medium", "Fast"]
 linear_search_iterator = Label(window, text = "hello", font = ("Times New Roman", 10, "bold"), width = 10, height = 10)
@@ -50,6 +51,7 @@ def generate_array():
     global random_array, random_array_elements
     random_array = [random.randint(0,99) for i in range(15)]
     random_array.sort()
+    random_array_elements = []
     for i in range(len(random_array)):
         label = Label(window, text = random_array[i], font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 3, height = 2, relief = "solid", borderwidth = 1)
         label.place(x = 150 + (i * 30), y = 270)
@@ -57,14 +59,16 @@ def generate_array():
 
 # generates a random linked list of numbers of size 10
 def generate_LL():
-    global random_linked_list, random_linked_list_elements
-    random_linked_list = [random.randint(0,99) for i in range(15)]
+    global random_linked_list, random_linked_list_elements, random_linked_list_arrows
+    random_linked_list = [random.randint(0,99) for i in range(11)]
+    random_linked_list_elements = []
     for i in range(len(random_linked_list)):
         label = Label(window, text = random_linked_list[i], font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 3, height = 2, relief = "solid", borderwidth = 1)
         label1 = Label(window, text = "-->", font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 3, height = 2)	
         label.place(x = 150 + (i * 50), y = 270)
         label1.place(x = 150 + (i * 50) + 25, y = 270)
         random_linked_list_elements.append(label)
+        random_linked_list_arrows.append(label1)
 
 #displays the search element if the user selects linear search or binary search
 def search_algo_element():
@@ -149,6 +153,7 @@ def binary_search():
     label_left_element.config(bg = "yellow")
     label_right_element.config(bg = "yellow")
     label_mid_element.config(bg = "yellow")
+    found = False
     window.update()
     while (left<=right):
         mid = left + (right - left)//2
@@ -158,7 +163,6 @@ def binary_search():
         label_left_element.config(bg = "yellow")
         label_right_element.config(bg = "yellow")
         label_mid_element.config(bg = "yellow")
-
         time.sleep(pace)
         window.update()
         if (element_to_find>random_array[mid]):
@@ -174,6 +178,7 @@ def binary_search():
             window.update()
             right = mid-1
         else:
+            found = True
             label_left_element.config(bg = "white")
             label_right_element.config(bg = "white")
             label_mid_element.config(bg = "red")
@@ -182,10 +187,27 @@ def binary_search():
             label_mid_element.config(bg = "white")
             window.update()
             break
+    if (found):
+        label_found = Label(window, text = "Element " + str(element_to_find) + " found at index " + str(mid), font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 20, height = 2)
+        label_found.place(x = 150, y = 320)
+        window.update()
+        window.after(2000, label_found.destroy)
+    else:
+        label_not_found = Label(window, text = "Element " + str(element_to_find) + " not found", font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 20, height = 2)
+        label_not_found.place(x = 150, y = 320)
+        window.update()
+        window.after(2000, label_not_found.destroy)
 
 #runs the algorithm to find the middle of the linked list
 def middle_LL():
-    global random_linked_list, random_linked_list_elements, label_slow_pointer, label_fast_pointer
+    global random_linked_list, random_linked_list_elements, label_slow_pointer, label_fast_pointer, pace, speed
+    speed = selected_speed.get()
+    if (speed=="Fast"): 
+        pace = 0.2
+    elif (speed=="Medium"):
+        pace = 0.6
+    else:
+        pace = 1
     #find the middle of the linked list
     slow = 0
     fast = 0
@@ -198,7 +220,7 @@ def middle_LL():
     while (fast<N and fast+1<N):
         label_fast_pointer.config(bg = "white")
         label_slow_pointer.config(bg = "white")
-        time.sleep(1)
+        time.sleep(pace)
         window.update()
         slow = slow + 1
         fast = fast + 2
@@ -207,12 +229,12 @@ def middle_LL():
         label_fast_pointer.config(bg = "yellow")
         label_slow_pointer.config(bg = "yellow")
         window.update()
-        time.sleep(1)
+        time.sleep(pace)
     if (fast == N):
         label_fast_pointer.config(bg = "white")
         label_slow_pointer.config(bg = "red")
         window.update()
-        time.sleep(2)
+        time.sleep(2.5)
         label_slow_pointer.config(bg = "white")
         window.update()
     else:
@@ -221,7 +243,7 @@ def middle_LL():
         label_slow_pointer = random_linked_list_elements[slow+1]
         label_slow_pointer.config(bg = "red")
         window.update()
-        time.sleep(2)
+        time.sleep(2.5)
         label_slow_pointer.config(bg = "white")
         window.update()
 
@@ -239,10 +261,10 @@ def run_algorithm():
 #resets all default values
 def reset():
     #reset the drop down menus
-    global label, random_array, algorithm, speed, random_array_elements, random_linked_list, label_left_element, label_right_element, label_mid_element, random_linked_list_elements
+    global label, random_array, algorithm, speed, random_array_elements, random_linked_list, label_left_element, label_right_element, label_mid_element, random_linked_list_elements, random_linked_list_arrows
     selected_algorithm.set(algorithms[0])
     selected_speed.set(speeds[0])
-    algorithm = ""
+    algorithm = "" 
     speed = ""
     #remove the array elements from the screen
     for i in range(0, len(random_array_elements)):
@@ -255,9 +277,17 @@ def reset():
         #delete label from screen
         window.after(0, label.destroy)
         # label.destroy()
+    #reset the linked list elements
+    for i in range(0, len(random_linked_list)):
+        label = random_linked_list_elements[i]
+        window.after(0, label.destroy)
+    for i in range(0, len(random_linked_list)):
+        label = random_linked_list_arrows[i]
+        window.after(0, label.destroy)
     random_array = []
     random_linked_list = []
     random_linked_list_elements = []
+    random_linked_list_arrows = []
     random_array_elements = []
 #window elements
 label_name = Label(window, text = "Algorithm Visualizer", font = ("Times New Roman", 20, "bold")).place(x = 275, y = 10)
