@@ -13,6 +13,8 @@ label_current_element = Label()
 label_left_element = Label()
 label_right_element = Label()
 label_mid_element = Label()
+label_slow_pointer = Label()
+label_fast_pointer = Label()
 algorithm = ""
 speed = ""
 pace = 0
@@ -20,8 +22,10 @@ element_to_find = ""
 label_search_element = Label(window, text = "Search Element: ", font = ("Times New Roman", 15, "bold"))
 entry_search_element = Entry(window, font = ("Times New Roman", 10), bg = "white", fg = "black")
 random_array = []
+random_linked_list = []
 random_array_elements = []
-algorithms = ["Linear Search","Binary Search", "Kadane's Algorithm", "Selection Sort"]
+random_linked_list_elements = []
+algorithms = ["Linear Search","Binary Search", "Kadane's Algorithm", "Selection Sort", "Middle of Linked List", "Merge Sort"]
 speeds = ["Slow", "Medium", "Fast"]
 linear_search_iterator = Label(window, text = "hello", font = ("Times New Roman", 10, "bold"), width = 10, height = 10)
 
@@ -42,22 +46,40 @@ def choose_speed():
 #generates a random array of numbers of size 15
 def generate_array():
     #generates a random array of numbers 
-    global random_array
+    global random_array, random_array_elements
     random_array = [random.randint(0,99) for i in range(15)]
     random_array.sort()
     for i in range(len(random_array)):
-        label = Label(window, text = random_array[i], font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 3, height = 2)
+        # label = Label(window, text = random_array[i], font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 3, height = 2)
+        # label.place(x = 150 + (i * 30), y = 270)
+        # create the label along with a border colour
+        label = Label(window, text = random_array[i], font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 3, height = 2, relief = "solid", borderwidth = 1)
         label.place(x = 150 + (i * 30), y = 270)
         # window.update()
         # time.sleep(1)
         # label.config(bg = "green")
         random_array_elements.append(label)
         # window.update()
+# generates a random linked list of numbers of size 10
+def generate_LL():
+    global random_linked_list, random_linked_list_elements
+    random_linked_list = [random.randint(0,99) for i in range(15)]
+    for i in range(len(random_linked_list)):
+        label = Label(window, text = random_linked_list[i], font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 3, height = 2, relief = "solid", borderwidth = 1)
+        label1 = Label(window, text = "-->", font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 3, height = 2)	
+        label.place(x = 150 + (i * 50), y = 270)
+        label1.place(x = 150 + (i * 50) + 25, y = 270)
+        random_linked_list_elements.append(label)
 
 #displays the search element if the user selects linear search or binary search
 def search_algo_element():
     label_search_element.place(x = 150, y = 230)
     entry_search_element.place(x = 320, y = 235)
+    button_generate_array.place(x = 270, y = 185)
+
+def LL_algo_element():
+    button_generate_LL.place(x = 270, y = 185)
+
 
 #runs the linear search algorithm visualization
 def linear_search():
@@ -88,6 +110,8 @@ def linear_search():
             found = True
             label_element_found = Label(window, text = "Element " + str(element_to_find) + " found", font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 20, height = 2)
             label_element_found.place(x = 150, y = 320)
+            window.update()
+            window.after(2000, label_element_found.destroy)
             break
         else:
             # label1 = Label(window, text = "|", font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 3, height = 2)
@@ -160,6 +184,51 @@ def binary_search():
             window.update()
             break
 
+def middle_LL():
+    global random_linked_list, random_linked_list_elements, label_slow_pointer, label_fast_pointer
+    #find the middle of the linked list
+    slow = 0
+    fast = 0
+    N = len(random_linked_list) - 1
+    label_fast_pointer = random_linked_list_elements[fast]
+    label_slow_pointer = random_linked_list_elements[slow]
+    label_fast_pointer.config(bg = "yellow")
+    label_slow_pointer.config(bg = "yellow")
+    window.update()
+    while (fast<N and fast+1<N):
+        label_fast_pointer.config(bg = "white")
+        label_slow_pointer.config(bg = "white")
+        time.sleep(1)
+        window.update()
+        slow = slow + 1
+        fast = fast + 2
+        label_fast_pointer = random_linked_list_elements[fast]
+        label_slow_pointer = random_linked_list_elements[slow]
+        label_fast_pointer.config(bg = "yellow")
+        label_slow_pointer.config(bg = "yellow")
+        window.update()
+        time.sleep(1)
+    if (fast == N):
+        label_fast_pointer.config(bg = "white")
+        label_slow_pointer.config(bg = "red")
+        window.update()
+        time.sleep(2)
+        label_slow_pointer.config(bg = "white")
+        window.update()
+    else:
+        label_fast_pointer.config(bg = "white")
+        label_slow_pointer.config(bg = "white")
+        label_slow_pointer = random_linked_list_elements[slow+1]
+        label_slow_pointer.config(bg = "red")
+        window.update()
+        time.sleep(2)
+        label_slow_pointer.config(bg = "white")
+        window.update()
+
+
+
+
+
 #runs the binary search algorithm visualization
 def run_algorithm():
     global algorithm
@@ -168,14 +237,19 @@ def run_algorithm():
         linear_search()
     elif (algorithm == "Binary Search"):
         binary_search()
+    elif (algorithm == "Middle of Linked List"):
+        middle_LL()
 
 #resets the drop down menus
 def reset():
     #reset the drop down menus
-    global random_array, algorithm, speed
+    global random_array, algorithm, speed, random_array_elements, random_linked_list, label_left_element, label_right_element, label_mid_element, random_linked_list_elements
     selected_algorithm.set(algorithms[0])
     selected_speed.set(speeds[0])
     random_array = []
+    random_linked_list = []
+    random_linked_list_elements = []
+    random_array_elements = []
     algorithm = ""
     speed = ""
 
@@ -199,13 +273,17 @@ dropDown_speed.config(width = 20, font = ("Times New Roman", 10), bg = "white", 
 dropDown_speed.place(x = 320, y = 140)
 
 #buttons
-button_generate_array = Button(window, text="Generate Array", font = ("Times New Roman", 10), bg = "white", fg = "black", command = lambda: generate_array()).place(x = 270, y = 185)
+button_generate_array = Button(window, text="Generate Array", font = ("Times New Roman", 10), bg = "white", fg = "black", command = lambda: generate_array())
+button_generate_LL = Button(window, text = "Generate Linked List", font = ("Times New Roman", 10), bg = "white", fg = "black", command = lambda: generate_LL())
 button_reset = Button(window, text = "Reset", font = ("Times New Roman", 10), bg = "white", fg = "black", command = lambda: reset()).place(x = 400, y = 185)
 button_run_algorithm = Button(window, text = "Run", font = ("Times New Roman", 10), bg = "white", fg = "black", command = lambda: run_algorithm()).place(x = 470, y = 185)
 
 #if the user selects linear search or binary search, then the search element will be displayed
 selected_algorithm.trace("w", lambda *args: search_algo_element() if (selected_algorithm.get() == "Linear Search" or selected_algorithm.get() == "Binary Search") else label_search_element.place_forget())
 selected_algorithm.trace("w", lambda *args: search_algo_element() if (selected_algorithm.get() == "Linear Search" or selected_algorithm.get() == "Binary Search") else entry_search_element.place_forget())
+selected_algorithm.trace("w", lambda *args: search_algo_element() if (selected_algorithm.get() == "Linear Search" or selected_algorithm.get() == "Binary Search" or selected_algorithm.get() == "Selection Sort" or selected_algorithm.get() == "Kadane's Algorithm" or selected_algorithm.get() == "Merge Sort") else button_generate_array.place_forget())
+selected_algorithm.trace("w", lambda *args: LL_algo_element() if (selected_algorithm.get() == "Middle of Linked List") else button_generate_LL.place_forget())
+
 #renders the window continuously
 window.mainloop()
 
