@@ -72,6 +72,7 @@ def linear_search():
         pace = 1
     element_to_find = entry_search_element.get()
     element_to_find = int(element_to_find)
+    found = False
     #traverse through the array and search for the element, and simultaneously show a label below the element which is being searched
     for i in range(len(random_array)):
         label_current_element = random_array_elements[i]
@@ -84,6 +85,9 @@ def linear_search():
             time.sleep(pace*3)
             label_current_element.config(bg = "white")
             window.update()
+            found = True
+            label_element_found = Label(window, text = "Element " + str(element_to_find) + " found", font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 20, height = 2)
+            label_element_found.place(x = 150, y = 320)
             break
         else:
             # label1 = Label(window, text = "|", font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 3, height = 2)
@@ -97,6 +101,11 @@ def linear_search():
             # window.after(1000, label1.destroy)
             window.update()
             # label.config(bg = "white")
+    if (found == False):
+        label_element_not_found = Label(window, text = "Element " + str(element_to_find) + " not found", font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 20, height = 2)
+        label_element_not_found.place(x = 150, y = 320)
+        window.update()
+        window.after(2000, label_element_not_found.destroy)
 def binary_search():
     global element_to_find, random_array, random_array_elements, label_left_element, label_right_element, label_mid_element, speed, pace
     speed = selected_speed.get()
