@@ -10,6 +10,9 @@ window.geometry("800x600")
 window.title("Algorithm Visualizer")
 
 label_current_element = Label()
+label_left_element = Label()
+label_right_element = Label()
+label_mid_element = Label()
 algorithm = ""
 speed = ""
 element_to_find = ""
@@ -87,6 +90,51 @@ def linear_search():
             # window.after(1000, label1.destroy)
             window.update()
             # label.config(bg = "white")
+def binary_search():
+    global element_to_find, random_array, random_array_elements, label_left_element, label_right_element, label_mid_element
+    element_to_find = entry_search_element.get()
+    element_to_find = int(element_to_find)
+    left = 0
+    right = len(random_array) - 1
+    mid = left + (right - left)//2
+    label_left_element = random_array_elements[left]
+    label_right_element = random_array_elements[right]
+    label_mid_element = random_array_elements[mid]
+    label_left_element.config(bg = "yellow")
+    label_right_element.config(bg = "yellow")
+    label_mid_element.config(bg = "yellow")
+    window.update()
+    while (left<=right):
+        mid = left + (right - left)//2
+        label_left_element = random_array_elements[left]
+        label_right_element = random_array_elements[right]
+        label_mid_element = random_array_elements[mid]
+        label_left_element.config(bg = "yellow")
+        label_right_element.config(bg = "yellow")
+        label_mid_element.config(bg = "yellow")
+        time.sleep(1)
+        window.update()
+        if (element_to_find>random_array[mid]):
+            label_left_element.config(bg = "white")
+            label_mid_element.config(bg = "white")
+            time.sleep(1)
+            window.update()
+            left = mid + 1
+        elif (element_to_find<random_array[mid]):
+            label_right_element.config(bg = "white")
+            label_mid_element.config(bg = "white")
+            time.sleep(1)
+            window.update()
+            right = mid-1
+        else:
+            label_left_element.config(bg = "white")
+            label_right_element.config(bg = "white")
+            label_mid_element.config(bg = "red")
+            time.sleep(1)
+            window.update()
+            break
+
+
 
 #runs the binary search algorithm visualization
 def run_algorithm():
@@ -94,6 +142,8 @@ def run_algorithm():
     algorithm = selected_algorithm.get()
     if (algorithm == "Linear Search"):
         linear_search()
+    elif (algorithm == "Binary Search"):
+        binary_search()
 
 #resets the drop down menus
 def reset():
