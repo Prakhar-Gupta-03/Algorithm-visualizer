@@ -45,28 +45,47 @@ def choose_speed():
     speed = selected_speed.get()
     print(speed)
 
+#destroys all the array labels on the screen
+def cleaner():
+    if(len(random_array_elements) != 0):
+        for i in range(len(random_array_elements)):
+            random_array_elements[i].destroy()
+            random_array.clear()
+    if(len(random_linked_list_elements) != 0):
+        for i in range(len(random_linked_list_elements)):
+            random_linked_list_elements[i].destroy()
+            random_linked_list.clear()
+    if(len(random_linked_list_arrows) != 0):
+        for i in range(len(random_linked_list_arrows)):
+            random_linked_list_arrows[i].destroy()
+            random_linked_list.clear()
+            
 #generates a random array of numbers of size 15
 def generate_array():
     #generates a random array of numbers 
     global random_array, random_array_elements
-    random_array = [random.randint(0,99) for i in range(15)]
-    random_array.sort()
+    cleaner()
+    random_array = [random.randint(-99,99) for i in range(15)]
+    algorithm = selected_algorithm.get()
+    if(algorithm == "Binary Search"):
+        random_array.sort()
     random_array_elements = []
     for i in range(len(random_array)):
         label = Label(window, text = random_array[i], font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 3, height = 2, relief = "solid", borderwidth = 1)
         label.place(x = 150 + (i * 30), y = 270)
         random_array_elements.append(label)
 
-# generates a random linked list of numbers of size 10
+# generates a random linked list of numbers of size 11
 def generate_LL():
     global random_linked_list, random_linked_list_elements, random_linked_list_arrows
     random_linked_list = [random.randint(0,99) for i in range(11)]
     random_linked_list_elements = []
     for i in range(len(random_linked_list)):
         label = Label(window, text = random_linked_list[i], font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 3, height = 2, relief = "solid", borderwidth = 1)
-        label1 = Label(window, text = "-->", font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 3, height = 2)	
+        label1 = Label(window, text = ">", font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 3, height = 2)	
         label.place(x = 150 + (i * 50), y = 270)
-        label1.place(x = 150 + (i * 50) + 25, y = 270)
+        if(i!=len(random_linked_list) -1):
+            label1.place(x = 150 + (i * 50) + 25, y = 270)
         random_linked_list_elements.append(label)
         random_linked_list_arrows.append(label1)
 
@@ -103,13 +122,13 @@ def linear_search():
             # label1 = Label(window, text = "|", font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 3, height = 2)
             # label1.place(x = 150 + (i * 30), y = 320)
             # label.config(bg = "blue")
-            label_current_element.config(bg = "yellow")
+            label_current_element.config(bg = "green")
             window.update()
             time.sleep(pace*3)
             label_current_element.config(bg = "white")
             window.update()
             found = True
-            label_element_found = Label(window, text = "Element " + str(element_to_find) + " found", font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 20, height = 2)
+            label_element_found = Label(window, text = "Element " + str(element_to_find) + " found at index " + str(i), font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 20, height = 2)
             label_element_found.place(x = 150, y = 320)
             window.update()
             window.after(2000, label_element_found.destroy)
@@ -181,14 +200,14 @@ def binary_search():
             found = True
             label_left_element.config(bg = "white")
             label_right_element.config(bg = "white")
-            label_mid_element.config(bg = "red")
+            label_mid_element.config(bg = "green")
             window.update()
             time.sleep(pace*3)
             label_mid_element.config(bg = "white")
             window.update()
             break
     if (found):
-        label_found = Label(window, text = "Element " + str(element_to_find) + " found at index " + str(mid), font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 20, height = 2)
+        label_found = Label(window, text = "Element " + str(element_to_find) + " found at index " + str(mid), font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 25, height = 2)
         label_found.place(x = 150, y = 320)
         window.update()
         window.after(2000, label_found.destroy)
@@ -247,6 +266,56 @@ def middle_LL():
         label_slow_pointer.config(bg = "white")
         window.update()
 
+def kadaneAlgo():
+    global random_array, random_array_elements, label_left_element, label_right_element, label_mid_element, pace, speed
+    speed = selected_speed.get()
+    if (speed=="Fast"): 
+        pace = 0.2
+    elif (speed=="Medium"):
+        pace = 0.6
+    else:
+        pace = 1
+    max_so_far = 0
+    max_ending_here = 0
+    start = 0
+    end = 0
+    s = 0
+    for i in range(0, len(random_array)):
+        max_ending_here = max_ending_here + random_array[i]
+        if (max_ending_here<0):
+            max_ending_here = 0
+            s = i + 1
+            if(s == len(random_array)):
+                break
+        elif (max_so_far<max_ending_here):
+            max_so_far = max_ending_here
+            start = s
+            end = i
+        label_left_element = random_array_elements[s]
+        label_right_element = random_array_elements[i]
+        if(s > i):
+            label_left_element.config(bg = "yellow")
+            label_right_element.config(bg = "white")
+        elif(s == i):
+            label_left_element.config(bg = "green")
+        else:
+            label_left_element.config(bg = "yellow")
+            label_right_element.config(bg = "cyan")
+        window.update()
+        time.sleep(pace)
+        label_left_element.config(bg = "white")
+        label_right_element.config(bg = "white")
+        window.update()
+    label_left_element = random_array_elements[start]
+    label_right_element = random_array_elements[end]
+    label_left_element.config(bg = "blue")
+    label_right_element.config(bg = "blue")
+    window.update()
+    time.sleep(2.5)
+    label_left_element.config(bg = "white")
+    label_right_element.config(bg = "white")
+    window.update()
+
 #runs the selected algorithm
 def run_algorithm():
     global algorithm
@@ -257,6 +326,8 @@ def run_algorithm():
         binary_search()
     elif (algorithm == "Middle of Linked List"):
         middle_LL()
+    elif (algorithm == "Kadane's Algorithm"):
+        kadaneAlgo()
 
 #resets all default values
 def reset():
@@ -315,11 +386,11 @@ button_reset = Button(window, text = "Reset", font = ("Times New Roman", 10), bg
 button_run_algorithm = Button(window, text = "Run", font = ("Times New Roman", 10), bg = "white", fg = "black", command = lambda: run_algorithm()).place(x = 470, y = 185)
 
 #if the user selects linear search or binary search, then the search element will be displayed
-selected_algorithm.trace("w", lambda *args: search_algo_element() if (selected_algorithm.get() == "Linear Search" or selected_algorithm.get() == "Binary Search") else label_search_element.place_forget())
-selected_algorithm.trace("w", lambda *args: search_algo_element() if (selected_algorithm.get() == "Linear Search" or selected_algorithm.get() == "Binary Search") else entry_search_element.place_forget())
 selected_algorithm.trace("w", lambda *args: search_algo_element() if (selected_algorithm.get() == "Linear Search" or selected_algorithm.get() == "Binary Search" or selected_algorithm.get() == "Selection Sort" or selected_algorithm.get() == "Kadane's Algorithm" or selected_algorithm.get() == "Merge Sort") else button_generate_array.place_forget())
 selected_algorithm.trace("w", lambda *args: LL_algo_element() if (selected_algorithm.get() == "Middle of Linked List") else button_generate_LL.place_forget())
 
+#initialises generate array buttons
+search_algo_element()
 #renders the window continuously
 window.mainloop()
 
