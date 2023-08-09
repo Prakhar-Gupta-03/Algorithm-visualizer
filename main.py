@@ -47,19 +47,30 @@ def choose_speed():
 
 #destroys all the array labels on the screen
 def cleaner():
+    clean_array()
+    clean_LL()
+
+def clean_array():
+    global random_array, random_array_elements
     if(len(random_array_elements) != 0):
         for i in range(len(random_array_elements)):
             random_array_elements[i].destroy()
-            random_array.clear()
+        random_array.clear()
+        random_array_elements.clear()
+
+def clean_LL():
+    global random_linked_list, random_linked_list_arrows, random_linked_list_elements
     if(len(random_linked_list_elements) != 0):
         for i in range(len(random_linked_list_elements)):
             random_linked_list_elements[i].destroy()
-            random_linked_list.clear()
+        random_linked_list.clear()
+        random_linked_list_elements.clear()
     if(len(random_linked_list_arrows) != 0):
         for i in range(len(random_linked_list_arrows)):
             random_linked_list_arrows[i].destroy()
-            random_linked_list.clear()
-            
+        random_linked_list.clear() 
+        random_linked_list_arrows.clear()
+
 #generates a random array of numbers of size 15
 def generate_array():
     #generates a random array of numbers 
@@ -69,7 +80,6 @@ def generate_array():
     algorithm = selected_algorithm.get()
     if(algorithm == "Binary Search"):
         random_array.sort()
-    random_array_elements = []
     for i in range(len(random_array)):
         label = Label(window, text = random_array[i], font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 3, height = 2, relief = "solid", borderwidth = 1)
         label.place(x = 150 + (i * 30), y = 270)
@@ -128,7 +138,7 @@ def linear_search():
             label_current_element.config(bg = "white")
             window.update()
             found = True
-            label_element_found = Label(window, text = "Element " + str(element_to_find) + " found at index " + str(i), font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 20, height = 2)
+            label_element_found = Label(window, text = "Element " + str(element_to_find) + " found at index " + str(i), font = ("Times New Roman", 10, "bold"), bg = "white", fg = "black", width = 25, height = 2)
             label_element_found.place(x = 150, y = 320)
             window.update()
             window.after(2000, label_element_found.destroy)
@@ -386,11 +396,12 @@ button_reset = Button(window, text = "Reset", font = ("Times New Roman", 10), bg
 button_run_algorithm = Button(window, text = "Run", font = ("Times New Roman", 10), bg = "white", fg = "black", command = lambda: run_algorithm()).place(x = 470, y = 185)
 
 #if the user selects linear search or binary search, then the search element will be displayed
+selected_algorithm.trace("w", lambda *args: search_algo_element() if (selected_algorithm.get() == "Linear Search" or selected_algorithm.get() == "Binary Search") else label_search_element.place_forget())
+selected_algorithm.trace("w", lambda *args: search_algo_element() if (selected_algorithm.get() == "Linear Search" or selected_algorithm.get() == "Binary Search") else entry_search_element.place_forget())
 selected_algorithm.trace("w", lambda *args: search_algo_element() if (selected_algorithm.get() == "Linear Search" or selected_algorithm.get() == "Binary Search" or selected_algorithm.get() == "Selection Sort" or selected_algorithm.get() == "Kadane's Algorithm" or selected_algorithm.get() == "Merge Sort") else button_generate_array.place_forget())
 selected_algorithm.trace("w", lambda *args: LL_algo_element() if (selected_algorithm.get() == "Middle of Linked List") else button_generate_LL.place_forget())
 
-#initialises generate array buttons
-search_algo_element()
+
 #renders the window continuously
 window.mainloop()
 
